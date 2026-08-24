@@ -1,7 +1,6 @@
 """Render EVERYFISH-COCO polygon annotations onto their source images.
 
-Annotation instances are drawn in blue, except classes 40 and 41 which are
-drawn in red and receive bounding boxes. Rendered images are written to a
+Annotation instances are drawn in blue. Rendered images are written to a
 `render/` directory.
 
 Usage:
@@ -116,12 +115,11 @@ def _draw_total_box(draw, img, count, font):
 def render_one(img_path, ann_path, out_path):
     """Draw all polygon instances of an annotation onto the image.
 
-    Each instance gets a blue or red outline/fill and a numbered id label
+    Each instance gets a blue outline/fill and a numbered id label
     placed on the centroid of every region belonging to that instance
-    (multi-region instances share the same id on each part). A bounding box is
-    drawn around class 40 and 41 instances. A textbox in the top-right corner
-    reports the total number of instances including non-fish instances in the
-    image.
+    (multi-region instances share the same id on each part). A textbox in the
+    top-right corner reports the total number of instances including
+    non-fish instances in the image.
     """
     with open(ann_path, "r") as f:
         data = json.load(f)
@@ -135,16 +133,14 @@ def render_one(img_path, ann_path, out_path):
 
     for idx, ann in enumerate(annotations):
         class_id = ann.get("category_id")
-        color = (255, 0, 0) if class_id in (40, 41) else (0, 0, 255)
+        color = (0, 0, 255)
         # Semi-transparent fill for the body + opaque outline for the edge.
         fill = color + (70,)
         outline = color + (255,)
         label = f"{idx}" if class_id is None else f"{idx}.{class_id}"
-        instance_points = []
 
         for poly in ann.get("segmentation") or []:
             pts = [(p["x"], p["y"]) for p in poly]
-            instance_points.extend(pts)
             if len(pts) >= 3:
                 draw.polygon(pts, fill=fill, outline=outline)
             elif len(pts) == 2:
@@ -167,16 +163,6 @@ def render_one(img_path, ann_path, out_path):
                     fill=(0, 0, 0, 160),
                 )
                 draw.text((tx, ty), label, fill=(255, 255, 255, 255), font=id_font)
-
-        # Draw one bounding box around all regions belonging to class 40 or 41.
-        if class_id in (40, 41) and instance_points:
-            xs = [point[0] for point in instance_points]
-            ys = [point[1] for point in instance_points]
-            draw.rectangle(
-                [min(xs), min(ys), max(xs), max(ys)],
-                outline=outline,
-                width=3,
-            )
 
     # Top-right textbox with the total number of instances (fish) in the image.
     _draw_total_box(draw, img, len(annotations), total_font)

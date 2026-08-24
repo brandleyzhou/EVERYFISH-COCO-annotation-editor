@@ -67,11 +67,6 @@ HTML = r'''<!doctype html>
     .annotation-item { display: grid; gap: 2px; text-align: left; font-size: 12px; }
     .annotation-item.active { background: #2563eb; }
     .annotation-item.visible { border-color: #22d3ee; box-shadow: inset 3px 0 0 #22d3ee; }
-    .annotation-item.class-40 { border-color: #991b1b; background: #451a1a; color: #fecaca; }
-    .annotation-item.class-40 .ann-meta { color: #fca5a5; }
-    .annotation-item.class-40.active { border-color: #facc15; background: #991b1b; color: #fff; }
-    .annotation-item.class-40.active .ann-meta { color: #fee2e2; }
-    .annotation-item.class-40.visible { border-color: #f87171; box-shadow: inset 3px 0 0 #f87171; }
     .annotation-item.class-highlighted { border-color: #dc2626; background: #7f1d1d; color: #fee2e2; }
     .annotation-item.class-highlighted .ann-meta { color: #fecaca; }
     .annotation-item.class-highlighted.active { border-color: #facc15; background: #991b1b; color: #fff; }
@@ -346,7 +341,7 @@ function drawDraftPolygon() {
 }
 function drawAnnotation(ann, index, forceVisible = false) {
   const categoryId = Number(ann.category_id);
-  const red = highlightCategoryId !== null ? categoryId === highlightCategoryId : [40, 41].includes(categoryId);
+  const red = highlightCategoryId !== null && categoryId === highlightCategoryId;
   const isHovered = !forceVisible && index === hovered;
   if (!isHovered) {
     ctx.fillStyle = red ? 'rgba(255,0,0,.28)' : 'rgba(0,0,255,.28)';
@@ -430,10 +425,9 @@ function renderAnnotationList() {
   }
   annotations.forEach((ann, index) => {
     const button = document.createElement('button');
-    const class40 = Number(ann.category_id) === 40;
     const classHighlighted = highlightCategoryId !== null && Number(ann.category_id) === highlightCategoryId;
     const visible = !annotationsVisible && visibleAnnotationIndexes.has(index);
-    button.className = `annotation-item${class40 ? ' class-40' : ''}${classHighlighted ? ' class-highlighted' : ''}${visible ? ' visible' : ''}${index === selected ? ' active' : ''}`;
+    button.className = `annotation-item${classHighlighted ? ' class-highlighted' : ''}${visible ? ' visible' : ''}${index === selected ? ' active' : ''}`;
     button.disabled = isBusy();
     const title = document.createElement('span');
     title.className = 'ann-title';

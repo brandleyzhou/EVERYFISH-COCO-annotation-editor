@@ -97,8 +97,7 @@ holding the click pans the image instead of selecting an instance.
 
 Each annotation instance is displayed over its source image:
 
-- Ordinary classes use blue polygon overlays.
-- Classes `40` and `41` use red polygon overlays and red bounding boxes.
+- All classes, including `40` and `41`, use the default blue polygon overlays.
 - The selected instance is highlighted in yellow.
 - The status line shows the current image and instance count.
 
@@ -114,13 +113,14 @@ shows the newly selected annotation instead.
 
 Enter a numeric value in `Highlight class ID` and apply it to highlight every
 instance of that class with a red mask and bounding box. Matching rows in the
-annotation sidebar are highlighted red as well. The selected class remains
-active while navigating through the remaining images; use `Clear highlight` to
-restore the default class colors.
+annotation sidebar are highlighted red as well. This applies to any class,
+including classes `40` and `41`. The selected class remains active while
+navigating through the remaining images; use `Clear highlight` to restore the
+default class colors.
 
 ### Hover behavior
 
-When the mouse is over an instance, its polygon fill, outline, and label are hidden. For class `40` and class `41`, only the bounding box remains visible. Move the mouse away from the instance to restore the normal overlay.
+When the mouse is over an instance, its polygon fill, outline, and label are hidden. A highlighted instance keeps its bounding box visible. Move the mouse away from the instance to restore the normal overlay.
 
 For ordinary classes, no hover bounding box is shown, so the complete overlay is hidden while the pointer is over the instance.
 
@@ -191,7 +191,7 @@ Contains copies of the annotation JSON files. Deleted instances are applied here
 
 ### `reviewed_render/`
 
-Contains rendered PNGs only for images whose annotations have changed through the editor. Opening or browsing an image does not create or update a rendered PNG. These renderings show the current reviewed annotations, including class-40 and class-41 bounding boxes.
+Contains rendered PNGs only for images whose annotations have changed through the editor. Opening or browsing an image does not create or update a rendered PNG. These renderings show the current reviewed annotations and any active class highlighting.
 
 The source folders remain separate:
 
